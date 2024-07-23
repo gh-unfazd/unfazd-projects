@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text | Editor + Viewer</title>
+    <link rel="icon" type="image/png" href="images/text-editor-logo.png">
+    <style>
+        @font-face {
+            font-family: 'Heavitas';
+            src: url('Heavitas.ttf') format('truetype');
+        }
+        body {
+            font-family: 'Heavitas', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            position: relative; /* Added for positioning the new button */
+        }
+        .title-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        h1 {
+            margin: 0;
+            margin-right: 10px;
+            color: #333;
+        }
+        .info {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            font-size: 18px;
+            color: #555;
+        }
+        .info:hover .info-box {
+            display: block;
+        }
+        #footer {
+        	font-family: 'Heavitas', Arial, sans-serif;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .info-box {
+            display: none;
+            position: absolute;
+            bottom: -10px; /* Position it slightly above the info icon */
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            z-index: 1;
+            border-radius: 12px;
+            overflow-y: auto; /* Ensure scrollable if content overflows */
+            max-height: 150px; /* Set a max height */
+        }
+        textarea {
+            width: 80%;
+            height: 300px;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            border: 1px solid #ccc;
+        }
+        .file-name {
+	    font-family: 'Heavitas', Arial, sans-serif;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        #buttonContainer {
+            display: flex;
+            justify-content: center;
+            width: 80%;
+            margin-top: 20px;
+        }
+        button, label[for="fileUpload"] {
+            background-color: #333;
+            font-family: 'Heavitas', Arial, sans-serif;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            border: none;
+            margin: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        button:hover, label[for="fileUpload"]:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+        label[for="fileUpload"] {
+            display: inline-flex;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .back-button {
+            position: absolute; /* Position it relative to the body */
+            top: 20px;
+            left: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            border: none;
+            text-decoration: none; /* Remove underline from link */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="./" class="back-button">Other Projects</a>
+
+    <div class="title-container">
+        <h1>Text | Editor + Viewer</h1>
+        <div class="info">
+            ?
+            <div class="info-box">
+                <strong>Update Information:</strong><br>
+                - Added save to device feature.<br>
+                - Text is retained in local storage.<br>
+                - Customizable file name.<br>
+                - Ability to upload and view .txt files.
+            </div>
+        </div>
+    </div>
+    <input type="text" id="fileName" class="file-name" placeholder="Enter file name..." value="">
+    <textarea id="editor" placeholder="Start typing..."></textarea>
+    <div id="buttonContainer">
+        <button onclick="saveTextToFile()">Save to Device</button>
+        <label for="fileUpload">Upload .txt File</label>
+        <input type="file" id="fileUpload" accept=".txt">
+    </div>
+	<div id="footer"></div>
+    <script>
+        const editor = document.getElementById('editor');
+        const fileNameInput = document.getElementById('fileName');
+        const fileUpload = document.getElementById('fileUpload');
+
+        // Load saved text from local storage when the page loads
+        window.onload = function() {
+            const savedText = localStorage.getItem('textEditorContent');
+            if (savedText) {
+                editor.value = savedText;
+            }
+        };
+
+        // Save text to local storage every time the user types
+        editor.addEventListener('input', function() {
+            localStorage.setItem('textEditorContent', editor.value);
+        });
+
+        // Save the text to a file
+        function saveTextToFile() {
+            const text = editor.value;
+            const fileName = fileNameInput.value || 'textEditorContent.txt';
+            const blob = new Blob([text], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.download = fileName;
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.target = '_blank';
+            anchor.style.display = 'none'; // don't display the link
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+        }
+		function updateCopyright() {
+            const year = new Date().getFullYear();
+            document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
+        }
+        // Load text from a .txt file
+        fileUpload.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    editor.value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        });
+      	window.onload = updateCopyright;
+    </script>
+</body>
+</html>

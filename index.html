@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNFAZD.PROJECTS</title>
+    <style>
+        @font-face {
+            font-family: 'Heavitas';
+            src: url('Heavitas.ttf') format('truetype');
+        }
+        body {
+            background-color: white;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            flex-direction: column; /* Align items in a column */
+        }
+        .header {
+            font-family: 'Heavitas';
+            color: #333;
+            font-size: 36px; /* Increased font size */
+            margin-bottom: 30px; /* Increased space between header and tiles */
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+            max-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .tile {
+            font-family: 'Heavitas';
+            display: flex;
+            align-items: center;
+            background-color: #333;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+            color: white;
+            width: 100%;
+            max-width: 400px; /* Default max width */
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        .tile:hover {
+            background-color: #444;
+            transform: scale(1.1); /* Zoom effect on hover */
+        }
+        .tile img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+        .tile .logo {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .tile span {
+            margin-right: auto;
+        }
+        .footer {
+            font-family: 'Heavitas';
+            color: #333;
+            font-size: 14px;
+            margin-top: 20px;
+            text-align: center;
+        }
+      
+    </style>
+</head>
+<body>
+    <div class="header">UNFAZD.PROJECTS</div>
+    <div class="container">
+        <a class="tile" href="./python-editor">
+            <img src="images/python-editor-logo.png">
+            <div class="logo"></div>
+            <span>Python Editor</span>
+        </a>
+        <a class="tile" href="./html-editor">
+            <img src="images/html-editor-logo.png">
+            <div class="logo"></div>
+            <span>HTML Editor</span>
+        </a>
+        <a class="tile" href="./text-editor">
+            <img src="images/text-editor-logo.png">
+            <div class="logo"></div>
+            <span>Simple Notepad</span>
+        </a>
+    </div>
+    <div class="footer">
+        &copy; <span id="year"></span> UNFAZD.
+    </div>
+    <script>
+        // JavaScript to update the year dynamically
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
