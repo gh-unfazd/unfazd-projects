@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNFAZD.PROJECTS</title>
+    <title>UNFAZD PROJECTS</title>
     <link rel="icon" type="image/png" href="images/main_logo.png">
     <style>
         @font-face {
@@ -24,10 +24,20 @@
         }
         .header {
             font-family: 'Heavitas';
-            color: #333;
             font-size: 36px; /* Increased font size */
             margin-bottom: 30px; /* Increased space between header and tiles */
             text-align: center;
+            animation: colorChange 14s infinite; /* Apply the animation */
+        }
+        @keyframes colorChange {
+            0% { color: red; }
+            14.3% { color: orange; }
+            28.6% { color: yellow; }
+            42.9% { color: green; }
+            57.2% { color: blue; }
+            71.5% { color: indigo; }
+            85.8% { color: violet; }
+            100% { color: red; }
         }
         .container {
             display: flex;
@@ -83,7 +93,7 @@
     </style>
 </head>
 <body>
-    <div class="header">UNFAZD.PROJECTS</div>
+    <div class="header">UNFAZD PROJECTS</div>
     <div class="container">
         <a class="tile" href="./python-editor">
             <img src="images/python_logo.png">
