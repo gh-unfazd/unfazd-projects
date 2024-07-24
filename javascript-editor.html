@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Editor</title>
+    <link rel="icon" type="image/x-icon" href="images/js_logo.png">
+    <style>
+        @font-face {
+            font-family: 'Heavitas';
+            src: url('Heavitas.ttf') format('truetype');
+        }
+        body {
+            font-family: 'Heavitas', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+            color: #333;
+            height: 100vh;
+            box-sizing: border-box;
+            position: relative;
+        }
+        h1 {
+            font-family: 'Heavitas', Arial, sans-serif;
+            margin-bottom: 5px;
+        }
+        #container {
+            display: flex;
+            flex: 1;
+            width: 90%;
+            max-width: 1200px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #editorContainer, #outputContainer {
+            width: 50%;
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        #editor {
+            width: 100%;
+            height: calc(100vh - 200px);
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 14px;
+            overflow: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 0;
+            outline: none;
+        }
+        #runButton, #saveButton, #uploadButton {
+            font-family: 'Heavitas', Arial, sans-serif;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 5px;
+            transition: transform 0.3s ease;
+        }
+        #output {
+            width: 100%;
+            height: calc(100vh - 200px);
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 15px;
+            overflow: auto;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            position: relative;
+        }
+        #buttonContainer {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        #footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .back-button {
+            transition: transform 0.3s ease;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .back-button:hover {
+            background-color: #333;
+            transform: scale(1.05);
+        }
+        #runButton:hover, #saveButton:hover, #uploadButton:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
+        input[type="file"] {
+            display: none;
+        }
+    </style>
+    <script>
+        function runCode() {
+            let editor = document.getElementById('editor');
+            let output = document.getElementById('output');
+            output.innerHTML = ''; // Clear previous content
+            let scriptContent = editor.textContent;
+
+            // Create an iframe to safely execute the JavaScript code and capture console.log
+            let iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            output.appendChild(iframe);
+            
+            // Capture console output within the iframe
+            let doc = iframe.contentDocument || iframe.contentWindow.document;
+            doc.open();
+            doc.write('<!DOCTYPE html><html><head><title>Output</title></head><body><script>window.console.log = function(message) { var p = document.createElement("p"); p.textContent = message; document.body.appendChild(p); }<\/script><script>' + scriptContent + '<\/script></body></html>');
+            doc.close();
+        }
+
+        function saveCode() {
+            let editor = document.getElementById('editor');
+            let textToSave = editor.textContent;
+            let blob = new Blob([textToSave], { type: 'text/javascript' });
+            let link = document.createElement('a');
+            link.download = 'script.js';
+            link.href = window.URL.createObjectURL(blob);
+            link.click();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === "application/javascript" || file.type === "text/javascript") {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    const editor = document.getElementById('editor');
+                    editor.textContent = ''; // Clear existing content
+                    editor.textContent = content;
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please upload a valid JavaScript file.');
+            }
+        }
+
+        function updateCopyright() {
+            const year = new Date().getFullYear();
+            document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
+        }
+
+        window.onload = updateCopyright;
+    </script>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="./" class="back-button">Other Projects</a>
+
+    <h1>JavaScript Editor</h1>
+    <div id="container">
+        <div id="editorContainer">
+            <div id="editor" contenteditable="true">
+// Write your JavaScript code here
+console.log("Hello, JavaScript Editor!");
+            </div>
+        </div>
+        <div id="outputContainer">
+            <div id="output"></div>
+        </div>
+    </div>
+    <div id="buttonContainer">
+        <button id="runButton" onclick="runCode()">Run</button>
+        <button id="saveButton" onclick="saveCode()">Save to device</button>
+        <button id="uploadButton" onclick="document.getElementById('fileUpload').click()">Upload .js file</button>
+        <input type="file" id="fileUpload" accept=".js" onchange="handleFileUpload(event)">
+    </div>
+    <div id="footer"></div>
+</body>
+</html>
