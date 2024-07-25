@@ -15,12 +15,11 @@
             color: #fff;
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
-            flex-direction: column; /* Align items in a column */
         }
         .header {
             font-family: 'Heavitas';
@@ -43,27 +42,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-y: auto;
-            overflow-x: hidden;
-            max-height: 100vh;
+            width: 100%;
+            max-width: 1000px;
             padding: 20px;
             box-sizing: border-box;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px; /* Equal space between tiles */
+            justify-items: center; /* Center tiles horizontally */
+            align-items: center; /* Center tiles vertically */
+            width: 100%;
         }
         .tile {
             font-family: 'Heavitas';
             display: flex;
             align-items: center;
             background-color: #333;
-            margin-bottom: 20px;
             padding: 10px;
             border-radius: 12px;
             transition: transform 0.3s ease;
             text-decoration: none;
             color: white;
+            max-width: 400px;
             width: 100%;
-            max-width: 400px; /* Default max width */
-            position: relative;
-            overflow: hidden;
             box-sizing: border-box;
         }
         .tile:hover {
@@ -95,26 +98,28 @@
 <body>
     <div class="header">UNFAZD PROJECTS</div>
     <div class="container">
-        <a class="tile" href="./python-editor">
-            <img src="images/python_logo.png">
-            <div class="logo"></div>
-            <span>PYTHON EDITOR</span>
-        </a>
-        <a class="tile" href="./html-editor">
-            <img src="images/html_logo.png">
-            <div class="logo"></div>
-            <span>HTML EDITOR</span>
-        </a>
-        <a class="tile" href="./javascript-editor">
-            <img src="images/javascript_logo.png">
-            <div class="logo"></div>
-            <span>JAVASCRIPT EDITOR</span>
-        </a>
-        <a class="tile" href="./text-editor">
-            <img src="images/text_logo.png">
-            <div class="logo"></div>
-            <span>TEXT EDITOR</span>
-        </a>
+        <div class="grid">
+            <a class="tile" href="./python-editor">
+                <img src="images/python_logo.png">
+                <div class="logo"></div>
+                <span>PYTHON EDITOR</span>
+            </a>
+            <a class="tile" href="./html-editor">
+                <img src="images/html_logo.png">
+                <div class="logo"></div>
+                <span>HTML EDITOR</span>
+            </a>
+            <a class="tile" href="./javascript-editor">
+                <img src="images/javascript_logo.png">
+                <div class="logo"></div>
+                <span>JAVASCRIPT EDITOR</span>
+            </a>
+            <a class="tile" href="./text-editor">
+                <img src="images/text_logo.png">
+                <div class="logo"></div>
+                <span>TEXT EDITOR</span>
+            </a>
+        </div>
     </div>
     <div class="footer">
         &copy; <span id="year"></span> UNFAZD.
