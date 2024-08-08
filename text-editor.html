@@ -44,7 +44,7 @@
             display: block;
         }
         #footer {
-            font-family: 'Heavitas', Arial, sans-serif;
+        	font-family: 'Heavitas', Arial, sans-serif;
             margin-top: 20px;
             font-size: 14px;
             color: #555;
@@ -151,7 +151,7 @@
         .g_id_signin.hidden {
             display: none;
         }
-        /* Hide Save to Device button initially */
+        /* Hide Save to Device and Upload .txt File buttons initially */
         .hidden {
             display: none;
         }
@@ -193,7 +193,7 @@
     <textarea id="editor" placeholder="Start typing..."></textarea>
     <div id="buttonContainer">
         <button id="saveButton" class="hidden" onclick="saveTextToFile()">Save to Device</button>
-        <label for="fileUpload">Upload .txt File</label>
+        <label id="uploadLabel" for="fileUpload" class="hidden">Upload .txt File</label>
         <input type="file" id="fileUpload" accept=".txt">
     </div>
     <div id="footer"></div>
@@ -203,6 +203,7 @@
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
         const saveButton = document.getElementById('saveButton');
+        const uploadLabel = document.getElementById('uploadLabel');
 
         // Load saved text from local storage when the page loads
         window.onload = function() {
@@ -267,9 +268,10 @@
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
             
-            // Hide the sign-in button and show the save button after successful sign-in
+            // Hide the sign-in button and show the save button and upload button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
             saveButton.classList.remove('hidden');
+            uploadLabel.classList.remove('hidden');
         }
 
         // Function to parse JWT token
