@@ -18,77 +18,44 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: #f4f4f4;
             position: relative;
-            box-sizing: border-box; /* Ensures padding is included in width calculations */
+            box-sizing: border-box; /* Ensure padding and border are included in width/height */
         }
         .title-container {
-            display: flex;
-            flex-direction: column; /* Stack title and info vertically on smaller screens */
-            align-items: center;
+            text-align: center;
             margin-bottom: 20px;
-            text-align: center; /* Center align text */
         }
         h1 {
             margin: 0;
             color: #333;
         }
-        .info {
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            font-size: 18px;
-            color: #555;
-        }
-        .info:hover .info-box {
-            display: block;
-        }
-        #footer {
-            font-family: 'Heavitas', Arial, sans-serif;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #555;
-        }
-        .info-box {
-            display: none;
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 200px;
-            z-index: 1;
-            border-radius: 12px;
-            overflow-y: auto;
-            max-height: 150px;
-        }
         textarea {
             width: 100%;
-            max-width: 600px; /* Responsive max-width */
+            max-width: 800px;
             height: 300px;
             padding: 10px;
             font-size: 16px;
             margin-bottom: 20px;
             border-radius: 12px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
         }
         .file-name {
-            font-family: 'Heavitas', Arial, sans-serif;
+            width: 100%;
+            max-width: 800px;
             margin-bottom: 20px;
             border-radius: 6px;
-            width: 100%;
-            max-width: 600px; /* Responsive max-width */
+            box-sizing: border-box;
         }
         #buttonContainer {
             display: flex;
-            flex-direction: column; /* Stack buttons vertically on smaller screens */
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
             width: 100%;
-            max-width: 600px; /* Responsive max-width */
-            margin-top: 20px;
+            max-width: 800px;
         }
         button, label[for="fileUpload"] {
             background-color: #333;
@@ -99,12 +66,13 @@
             cursor: pointer;
             border-radius: 12px;
             border: none;
-            margin: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            box-sizing: border-box;
         }
         button:hover, label[for="fileUpload"]:hover {
             background-color: #444;
@@ -138,22 +106,20 @@
             background-color: #444;
             transform: scale(1.05);
         }
-        /* Responsive styling for Google Sign-In, user greeting, and sign-out */
         .auth-container {
             position: absolute;
             top: 20px;
             right: 20px;
             display: flex;
-            flex-direction: column; /* Stack elements vertically on smaller screens */
-            align-items: flex-end;
-            gap: 10px; /* Adjust spacing between buttons */
-            text-align: center; /* Center align text for smaller screens */
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .greeting {
             font-size: 16px;
             color: #333;
         }
-        .g_id_signin, .sign-out-button {
+        .g_id_signin {
             display: inline-block;
         }
         .g_id_signin.hidden {
@@ -176,17 +142,49 @@
             background-color: #444;
             transform: scale(1.05);
         }
-        @media (max-width: 600px) {
-            .title-container {
-                margin-bottom: 10px;
-            }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
             textarea, .file-name {
-                width: 90%;
+                width: 95%;
             }
             #buttonContainer {
                 flex-direction: column;
-                width: 90%;
             }
+            button, label[for="fileUpload"] {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .greeting {
+                font-size: 14px;
+            }
+            button, label[for="fileUpload"] {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            .back-button {
+                font-size: 14px;
+                padding: 8px 16px;
+                top: 10px;
+                left: 10px;
+            }
+            .auth-container {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        #footer {
+            font-family: 'Heavitas', Arial, sans-serif;
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+            padding-top: 20px; /* Added padding */
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
         }
     </style>
     <!-- Include Google API -->
@@ -212,16 +210,6 @@
 
     <div class="title-container">
         <h1>TEXT EDITOR</h1>
-        <div class="info">
-            ?
-            <div class="info-box">
-                <strong>Update Information:</strong><br>
-                - Added save to device feature.<br>
-                - Text is retained in local storage.<br>
-                - Customizable file name.<br>
-                - Ability to upload and view .txt files.
-            </div>
-        </div>
     </div>
     <input type="text" id="fileName" class="file-name" placeholder="Enter file name..." value="">
     <textarea id="editor" placeholder="Start typing..."></textarea>
@@ -249,8 +237,6 @@
                 fileNameInput.value = savedFileName;
             }
             updateCopyright();
-            // Adjust button visibility based on authentication status
-            updateButtonVisibility();
         };
 
         // Save text and file name to local storage every time the user types
@@ -295,13 +281,6 @@
             document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
         }
 
-        function updateButtonVisibility() {
-            // Check if user is signed in
-            const signedIn = localStorage.getItem('signedIn');
-            document.getElementById('saveButton').style.display = signedIn ? 'inline-block' : 'none';
-            document.getElementById('uploadLabel').style.display = signedIn ? 'inline-block' : 'none';
-        }
-
         // Google Sign-In Callback
         function handleCredentialResponse(response) {
             // Decode and parse the JWT token from Google's response
@@ -309,23 +288,19 @@
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
             
-            // Hide the sign-in button and show the sign-out button
+            // Hide the sign-in button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
-            document.getElementById('signOutButton').style.display = 'inline-block';
-            
-            // Show the buttons after sign-in
-            document.getElementById('saveButton').style.display = 'inline-block';
-            document.getElementById('uploadLabel').style.display = 'inline-block';
 
-            // Save sign-in status in local storage
-            localStorage.setItem('signedIn', 'true');
+            // Show the sign-out button after sign-in
+            document.getElementById('signOutButton').style.display = 'inline-block';
+
+            // Show the buttons after sign-in
+            document.getElementById('saveButton').style.visibility = 'visible';
+            document.getElementById('uploadLabel').style.visibility = 'visible';
         }
 
         // Sign-Out Function
         function signOut() {
-            // Clear sign-in status
-            localStorage.removeItem('signedIn');
-            
             // Hide the sign-out button and show the sign-in button again
             document.getElementById('signOutButton').style.display = 'none';
             document.querySelector('.g_id_signin').classList.remove('hidden');
@@ -334,11 +309,8 @@
             document.getElementById('greeting').innerText = `Hello, Guest`;
 
             // Hide the buttons after sign-out
-            document.getElementById('saveButton').style.display = 'none';
-            document.getElementById('uploadLabel').style.display = 'none';
-
-            // Refresh the page to reflect changes
-            window.location.reload();
+            document.getElementById('saveButton').style.visibility = 'hidden';
+            document.getElementById('uploadLabel').style.visibility = 'hidden';
         }
 
         // Function to parse JWT token
