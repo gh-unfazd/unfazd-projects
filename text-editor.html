@@ -113,16 +113,9 @@
             right: 20px;
             display: flex;
             align-items: center;
-            flex-wrap: wrap;
             gap: 10px;
         }
-        .auth-container .greeting {
-            display: none;
-            font-size: 16px;
-            color: #333;
-            margin-top: 10px;
-        }
-        .g_id_signin {
+        .auth-container .g_id_signin {
             display: inline-block;
         }
         .g_id_signin.hidden {
@@ -160,13 +153,6 @@
         }
 
         @media (max-width: 480px) {
-            .greeting {
-                font-size: 14px;
-            }
-            button, label[for="fileUpload"] {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
             .back-button {
                 font-size: 14px;
                 padding: 8px 16px;
@@ -176,6 +162,10 @@
             .auth-container {
                 top: 10px;
                 right: 10px;
+            }
+            button, label[for="fileUpload"] {
+                font-size: 14px;
+                padding: 8px 16px;
             }
         }
 
@@ -197,7 +187,7 @@
     <!-- Back Button -->
     <a href="./" class="back-button">Other Projects</a>
 
-    <!-- Sign-In and Greeting Container -->
+    <!-- Sign-In and Sign-Out Container -->
     <div class="auth-container">
         <div id="g_id_onload"
              data-client_id="35877151626-qitpirdr2o2pdel8vo2rdlc6mhvu3mg4.apps.googleusercontent.com"
@@ -208,7 +198,6 @@
         </div>
         <div class="g_id_signin" data-type="standard"></div>
         <button id="signOutButton" class="sign-out-button" onclick="signOut()">Sign Out</button>
-        <div id="greeting" class="greeting">Hello, Guest</div>
     </div>
 
     <div class="title-container">
@@ -223,17 +212,14 @@
     </div>
     <div id="footer"></div>
     <script>
-        // existing JavaScript code
         const editor = document.getElementById('editor');
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
         const saveButton = document.getElementById('saveButton');
         const uploadLabel = document.getElementById('uploadLabel');
-        const greeting = document.getElementById('greeting');
+        const signOutButton = document.getElementById('signOutButton');
 
-        // Load saved text from local storage when the page loads
         window.onload = function() {
-            // Load saved text and file name from local storage
             const savedText = localStorage.getItem('textEditorContent');
             const savedFileName = localStorage.getItem('textEditorFileName');
             if (savedText) {
@@ -245,7 +231,6 @@
             updateCopyright();
         };
 
-        // Save text and file name to local storage every time the user types
         editor.addEventListener('input', function() {
             localStorage.setItem('textEditorContent', editor.value);
         });
@@ -254,7 +239,6 @@
             localStorage.setItem('textEditorFileName', fileNameInput.value);
         });
 
-        // Save the text to a file
         function saveTextToFile() {
             const text = editor.value;
             const fileName = fileNameInput.value || 'textEditorContent.txt';
@@ -263,20 +247,19 @@
             anchor.download = fileName;
             anchor.href = window.URL.createObjectURL(blob);
             anchor.target = '_blank';
-            anchor.style.display = 'none'; // don't display the link
+            anchor.style.display = 'none';
             document.body.appendChild(anchor);
             anchor.click();
             document.body.removeChild(anchor);
         }
 
-        // Load text from a .txt file
         fileUpload.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     editor.value = e.target.result;
-                    localStorage.setItem('textEditorContent', editor.value); // Save uploaded content
+                    localStorage.setItem('textEditorContent', editor.value);
                 };
                 reader.readAsText(file);
             }
@@ -287,41 +270,26 @@
             document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
         }
 
-        // Google Sign-In Callback
         function handleCredentialResponse(response) {
-            // Decode and parse the JWT token from Google's response
             const responsePayload = parseJwt(response.credential);
             const name = responsePayload.name || 'Guest';
-            greeting.innerText = `SIGNED IN AS: ${name}`;
             
             // Hide the sign-in button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
 
-            // Show the sign-out button after sign-in
-            document.getElementById('signOutButton').style.display = 'inline-block';
-
-            // Show the buttons after sign-in
+            // Show the sign-out button and action buttons after sign-in
+            signOutButton.style.display = 'inline-block';
             saveButton.style.visibility = 'visible';
             uploadLabel.style.visibility = 'visible';
-            greeting.style.display = 'block'; // Show the greeting
         }
 
-        // Sign-Out Function
         function signOut() {
-            // Hide the sign-out button and show the sign-in button again
             document.getElementById('signOutButton').style.display = 'none';
             document.querySelector('.g_id_signin').classList.remove('hidden');
-            
-            // Reset the greeting message
-            greeting.innerText = `Hello, Guest`;
-            greeting.style.display = 'none'; // Hide the greeting
-
-            // Hide the buttons after sign-out
             saveButton.style.visibility = 'hidden';
             uploadLabel.style.visibility = 'hidden';
         }
 
-        // Function to parse JWT token
         function parseJwt(token) {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
