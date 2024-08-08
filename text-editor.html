@@ -6,6 +6,7 @@
     <title>TEXT EDITOR</title>
     <link rel="icon" type="image/png" href="images/text_logo.png">
     <style>
+        /* existing CSS code */
         @font-face {
             font-family: 'Heavitas';
             src: url('Heavitas.ttf') format('truetype');
@@ -131,11 +132,39 @@
             background-color: #444;
             transform: scale(1.05);
         }
+        /* Additional styling for Google Sign-In and user greeting */
+        .auth-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .greeting {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #333;
+        }
     </style>
+    <!-- Include Google API -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <!-- Back Button -->
     <a href="./" class="back-button">Other Projects</a>
+
+    <!-- Sign-In and Greeting Container -->
+    <div class="auth-container">
+        <div id="greeting" class="greeting">Hello, Guest</div>
+        <div id="g_id_onload"
+             data-client_id="35877151626-qitpirdr2o2pdel8vo2rdlc6mhvu3mg4.apps.googleusercontent.com"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+    </div>
 
     <div class="title-container">
         <h1>TEXT EDITOR</h1>
@@ -157,8 +186,9 @@
         <label for="fileUpload">Upload .txt File</label>
         <input type="file" id="fileUpload" accept=".txt">
     </div>
-	<div id="footer"></div>
+    <div id="footer"></div>
     <script>
+        // existing JavaScript code
         const editor = document.getElementById('editor');
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
@@ -217,6 +247,24 @@
         function updateCopyright() {
             const year = new Date().getFullYear();
             document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
+        }
+
+        // Google Sign-In Callback
+        function handleCredentialResponse(response) {
+            // Decode and parse the JWT token from Google's response
+            const responsePayload = parseJwt(response.credential);
+            const name = responsePayload.name || 'Guest';
+            document.getElementById('greeting').innerText = `Hello, ${name}`;
+        }
+
+        // Function to parse JWT token
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
         }
     </script>
 </body>
