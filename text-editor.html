@@ -151,6 +151,10 @@
         .g_id_signin.hidden {
             display: none;
         }
+        /* Hide Save to Device button initially */
+        .hidden {
+            display: none;
+        }
     </style>
     <!-- Include Google API -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -163,7 +167,7 @@
     <div class="auth-container">
         <div id="greeting" class="greeting">Hello, Guest</div>
         <div id="g_id_onload"
-             data-client_id="35877151626-qitpirdr2o2pdel8vo2rdlc6mhvu3mg4.apps.googleusercontent.com"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID"
              data-context="signin"
              data-ux_mode="popup"
              data-callback="handleCredentialResponse"
@@ -188,7 +192,7 @@
     <input type="text" id="fileName" class="file-name" placeholder="Enter file name..." value="">
     <textarea id="editor" placeholder="Start typing..."></textarea>
     <div id="buttonContainer">
-        <button onclick="saveTextToFile()">Save to Device</button>
+        <button id="saveButton" class="hidden" onclick="saveTextToFile()">Save to Device</button>
         <label for="fileUpload">Upload .txt File</label>
         <input type="file" id="fileUpload" accept=".txt">
     </div>
@@ -198,6 +202,7 @@
         const editor = document.getElementById('editor');
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
+        const saveButton = document.getElementById('saveButton');
 
         // Load saved text from local storage when the page loads
         window.onload = function() {
@@ -262,8 +267,9 @@
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
             
-            // Hide the sign-in button after successful sign-in
+            // Hide the sign-in button and show the save button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
+            saveButton.classList.remove('hidden');
         }
 
         // Function to parse JWT token
