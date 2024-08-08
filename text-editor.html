@@ -152,6 +152,22 @@
         .g_id_signin.hidden {
             display: none;
         }
+        #signOutButton {
+            visibility: hidden; /* Hidden until user signs in */
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 12px;
+            border: none;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        #signOutButton:hover {
+            background-color: #444;
+            transform: scale(1.05);
+        }
     </style>
     <!-- Include Google API -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -171,6 +187,7 @@
              data-auto_prompt="false">
         </div>
         <div class="g_id_signin" data-type="standard"></div>
+        <button id="signOutButton" onclick="signOut()">Sign Out</button>
     </div>
 
     <div class="title-container">
@@ -269,6 +286,9 @@
             // Show the buttons after sign-in
             document.getElementById('saveButton').style.visibility = 'visible';
             document.getElementById('uploadLabel').style.visibility = 'visible';
+
+            // Show the sign-out button after sign-in
+            document.getElementById('signOutButton').style.visibility = 'visible';
         }
 
         // Function to parse JWT token
@@ -279,6 +299,22 @@
                 return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
             }).join(''));
             return JSON.parse(jsonPayload);
+        }
+
+        // Sign out function
+        function signOut() {
+            // Reset greeting to "Hello, Guest"
+            document.getElementById('greeting').innerText = "Hello, Guest";
+            
+            // Hide the sign-out button
+            document.getElementById('signOutButton').style.visibility = 'hidden';
+
+            // Hide the save and upload buttons
+            document.getElementById('saveButton').style.visibility = 'hidden';
+            document.getElementById('uploadLabel').style.visibility = 'hidden';
+
+            // Show the sign-in button
+            document.querySelector('.g_id_signin').classList.remove('hidden');
         }
     </script>
 </body>
