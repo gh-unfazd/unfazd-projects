@@ -21,7 +21,7 @@
             min-height: 100vh;
             background-color: #f4f4f4;
             position: relative;
-            box-sizing: border-box; /* Ensure padding and border are included in width/height */
+            box-sizing: border-box;
         }
         .title-container {
             text-align: center;
@@ -56,6 +56,7 @@
             gap: 10px;
             width: 100%;
             max-width: 800px;
+            margin-bottom: 20px;
         }
         button, label[for="fileUpload"] {
             background-color: #333;
@@ -115,9 +116,11 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .greeting {
+        .auth-container .greeting {
+            display: none;
             font-size: 16px;
             color: #333;
+            margin-top: 10px;
         }
         .g_id_signin {
             display: inline-block;
@@ -196,7 +199,6 @@
 
     <!-- Sign-In and Greeting Container -->
     <div class="auth-container">
-        <div id="greeting" class="greeting">Hello, Guest</div>
         <div id="g_id_onload"
              data-client_id="35877151626-qitpirdr2o2pdel8vo2rdlc6mhvu3mg4.apps.googleusercontent.com"
              data-context="signin"
@@ -206,6 +208,7 @@
         </div>
         <div class="g_id_signin" data-type="standard"></div>
         <button id="signOutButton" class="sign-out-button" onclick="signOut()">Sign Out</button>
+        <div id="greeting" class="greeting">Hello, Guest</div>
     </div>
 
     <div class="title-container">
@@ -224,6 +227,9 @@
         const editor = document.getElementById('editor');
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
+        const saveButton = document.getElementById('saveButton');
+        const uploadLabel = document.getElementById('uploadLabel');
+        const greeting = document.getElementById('greeting');
 
         // Load saved text from local storage when the page loads
         window.onload = function() {
@@ -286,7 +292,7 @@
             // Decode and parse the JWT token from Google's response
             const responsePayload = parseJwt(response.credential);
             const name = responsePayload.name || 'Guest';
-            document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
+            greeting.innerText = `SIGNED IN AS: ${name}`;
             
             // Hide the sign-in button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
@@ -295,8 +301,9 @@
             document.getElementById('signOutButton').style.display = 'inline-block';
 
             // Show the buttons after sign-in
-            document.getElementById('saveButton').style.visibility = 'visible';
-            document.getElementById('uploadLabel').style.visibility = 'visible';
+            saveButton.style.visibility = 'visible';
+            uploadLabel.style.visibility = 'visible';
+            greeting.style.display = 'block'; // Show the greeting
         }
 
         // Sign-Out Function
@@ -306,11 +313,12 @@
             document.querySelector('.g_id_signin').classList.remove('hidden');
             
             // Reset the greeting message
-            document.getElementById('greeting').innerText = `Hello, Guest`;
+            greeting.innerText = `Hello, Guest`;
+            greeting.style.display = 'none'; // Hide the greeting
 
             // Hide the buttons after sign-out
-            document.getElementById('saveButton').style.visibility = 'hidden';
-            document.getElementById('uploadLabel').style.visibility = 'hidden';
+            saveButton.style.visibility = 'hidden';
+            uploadLabel.style.visibility = 'hidden';
         }
 
         // Function to parse JWT token
