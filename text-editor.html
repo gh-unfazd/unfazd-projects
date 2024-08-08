@@ -220,6 +220,10 @@
         const signOutButton = document.getElementById('signOutButton');
 
         window.onload = function() {
+            // Hide the buttons initially
+            saveButton.style.visibility = 'hidden';
+            uploadLabel.style.visibility = 'hidden';
+
             const savedText = localStorage.getItem('textEditorContent');
             const savedFileName = localStorage.getItem('textEditorFileName');
             if (savedText) {
@@ -272,20 +276,16 @@
 
         function handleCredentialResponse(response) {
             const responsePayload = parseJwt(response.credential);
-            const name = responsePayload.name || 'Guest';
-            
-            // Hide the sign-in button after successful sign-in
-            document.querySelector('.g_id_signin').classList.add('hidden');
 
-            // Show the sign-out button and action buttons after sign-in
+            document.querySelector('.g_id_signin').classList.add('hidden');
             signOutButton.style.display = 'inline-block';
             saveButton.style.visibility = 'visible';
             uploadLabel.style.visibility = 'visible';
         }
 
         function signOut() {
-            document.getElementById('signOutButton').style.display = 'none';
             document.querySelector('.g_id_signin').classList.remove('hidden');
+            signOutButton.style.display = 'none';
             saveButton.style.visibility = 'hidden';
             uploadLabel.style.visibility = 'hidden';
         }
