@@ -21,7 +21,7 @@
             justify-content: center;
             height: 100vh;
             background-color: #f4f4f4;
-            position: relative; /* Added for positioning the new button */
+            position: relative;
         }
         .title-container {
             display: flex;
@@ -145,6 +145,12 @@
             font-size: 16px;
             color: #333;
         }
+        .g_id_signin {
+            display: inline-block;
+        }
+        .g_id_signin.hidden {
+            display: none;
+        }
     </style>
     <!-- Include Google API -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -255,6 +261,9 @@
             const responsePayload = parseJwt(response.credential);
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `Hello, ${name}`;
+            
+            // Hide the sign-in button after successful sign-in
+            document.querySelector('.g_id_signin').classList.add('hidden');
         }
 
         // Function to parse JWT token
