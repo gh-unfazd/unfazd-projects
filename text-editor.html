@@ -44,7 +44,7 @@
             display: block;
         }
         #footer {
-            font-family: 'Heavitas', Arial, sans-serif;
+        	font-family: 'Heavitas', Arial, sans-serif;
             margin-top: 20px;
             font-size: 14px;
             color: #555;
@@ -74,7 +74,7 @@
             border: 1px solid #ccc;
         }
         .file-name {
-            font-family: 'Heavitas', Arial, sans-serif;
+	    font-family: 'Heavitas', Arial, sans-serif;
             margin-bottom: 20px;
             border-radius: 6px;
         }
@@ -99,6 +99,7 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            visibility: hidden; /* Initially hidden */
         }
         button:hover, label[for="fileUpload"]:hover {
             background-color: #444;
@@ -151,10 +152,6 @@
         .g_id_signin.hidden {
             display: none;
         }
-        /* Hide Save to Device and Upload .txt File buttons initially */
-        .hidden {
-            display: none;
-        }
     </style>
     <!-- Include Google API -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -192,8 +189,8 @@
     <input type="text" id="fileName" class="file-name" placeholder="Enter file name..." value="">
     <textarea id="editor" placeholder="Start typing..."></textarea>
     <div id="buttonContainer">
-        <button id="saveButton" class="hidden" onclick="saveTextToFile()">Save to Device</button>
-        <label id="uploadLabel" for="fileUpload" class="hidden">Upload .txt File</label>
+        <button id="saveButton" onclick="saveTextToFile()">Save to Device</button>
+        <label id="uploadLabel" for="fileUpload">Upload .txt File</label>
         <input type="file" id="fileUpload" accept=".txt">
     </div>
     <div id="footer"></div>
@@ -202,8 +199,6 @@
         const editor = document.getElementById('editor');
         const fileNameInput = document.getElementById('fileName');
         const fileUpload = document.getElementById('fileUpload');
-        const saveButton = document.getElementById('saveButton');
-        const uploadLabel = document.getElementById('uploadLabel');
 
         // Load saved text from local storage when the page loads
         window.onload = function() {
@@ -268,10 +263,12 @@
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
             
-            // Hide the sign-in button and show the save button and upload button after successful sign-in
+            // Hide the sign-in button after successful sign-in
             document.querySelector('.g_id_signin').classList.add('hidden');
-            saveButton.classList.remove('hidden');
-            uploadLabel.classList.remove('hidden');
+
+            // Show the buttons after sign-in
+            document.getElementById('saveButton').style.visibility = 'visible';
+            document.getElementById('uploadLabel').style.visibility = 'visible';
         }
 
         // Function to parse JWT token
