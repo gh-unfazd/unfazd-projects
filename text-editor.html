@@ -22,6 +22,7 @@
             height: 100vh;
             background-color: #f4f4f4;
             position: relative;
+            box-sizing: border-box; /* Ensures padding is included in width calculations */
         }
         .title-container {
             display: flex;
@@ -52,7 +53,7 @@
         .info-box {
             display: none;
             position: absolute;
-            bottom: -10px; /* Position it slightly above the info icon */
+            bottom: -10px;
             left: 0;
             background-color: #fff;
             border: 1px solid #ccc;
@@ -61,11 +62,12 @@
             width: 200px;
             z-index: 1;
             border-radius: 12px;
-            overflow-y: auto; /* Ensure scrollable if content overflows */
-            max-height: 150px; /* Set a max height */
+            overflow-y: auto;
+            max-height: 150px;
         }
         textarea {
             width: 80%;
+            max-width: 600px; /* Responsive max-width */
             height: 300px;
             padding: 10px;
             font-size: 16px;
@@ -77,11 +79,14 @@
             font-family: 'Heavitas', Arial, sans-serif;
             margin-bottom: 20px;
             border-radius: 6px;
+            width: 80%;
+            max-width: 600px; /* Responsive max-width */
         }
         #buttonContainer {
             display: flex;
             justify-content: center;
             width: 80%;
+            max-width: 600px; /* Responsive max-width */
             margin-top: 20px;
         }
         button, label[for="fileUpload"] {
@@ -111,7 +116,7 @@
             display: none;
         }
         .back-button {
-            position: absolute; /* Position it relative to the body */
+            position: absolute;
             top: 20px;
             left: 20px;
             background-color: #333;
@@ -121,7 +126,7 @@
             cursor: pointer;
             border-radius: 12px;
             border: none;
-            text-decoration: none; /* Remove underline from link */
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -139,15 +144,14 @@
             right: 20px;
             display: flex;
             align-items: center;
+            gap: 10px; /* Adjust spacing between buttons */
         }
         .greeting {
-            margin-right: 10px;
             font-size: 16px;
             color: #333;
         }
         .g_id_signin {
             display: inline-block;
-            margin-right: 10px;
         }
         .g_id_signin.hidden {
             display: none;
@@ -230,6 +234,8 @@
                 fileNameInput.value = savedFileName;
             }
             updateCopyright();
+            // Adjust button visibility based on authentication status
+            updateButtonVisibility();
         };
 
         // Save text and file name to local storage every time the user types
@@ -274,6 +280,13 @@
             document.getElementById('footer').innerText = `© ${year} UNFAZD.`;
         }
 
+        function updateButtonVisibility() {
+            // Check if user is signed in
+            const signedIn = localStorage.getItem('signedIn');
+            document.getElementById('saveButton').style.display = signedIn ? 'inline-block' : 'none';
+            document.getElementById('uploadLabel').style.display = signedIn ? 'inline-block' : 'none';
+        }
+
         // Google Sign-In Callback
         function handleCredentialResponse(response) {
             // Decode and parse the JWT token from Google's response
@@ -281,19 +294,23 @@
             const name = responsePayload.name || 'Guest';
             document.getElementById('greeting').innerText = `SIGNED IN AS: ${name}`;
             
-            // Hide the sign-in button after successful sign-in
+            // Hide the sign-in button and show the sign-out button
             document.querySelector('.g_id_signin').classList.add('hidden');
-
-            // Show the sign-out button after sign-in
             document.getElementById('signOutButton').style.display = 'inline-block';
-
+            
             // Show the buttons after sign-in
-            document.getElementById('saveButton').style.visibility = 'visible';
-            document.getElementById('uploadLabel').style.visibility = 'visible';
+            document.getElementById('saveButton').style.display = 'inline-block';
+            document.getElementById('uploadLabel').style.display = 'inline-block';
+
+            // Save sign-in status in local storage
+            localStorage.setItem('signedIn', 'true');
         }
 
         // Sign-Out Function
         function signOut() {
+            // Clear sign-in status
+            localStorage.removeItem('signedIn');
+            
             // Hide the sign-out button and show the sign-in button again
             document.getElementById('signOutButton').style.display = 'none';
             document.querySelector('.g_id_signin').classList.remove('hidden');
@@ -302,8 +319,11 @@
             document.getElementById('greeting').innerText = `Hello, Guest`;
 
             // Hide the buttons after sign-out
-            document.getElementById('saveButton').style.visibility = 'hidden';
-            document.getElementById('uploadLabel').style.visibility = 'hidden';
+            document.getElementById('saveButton').style.display = 'none';
+            document.getElementById('uploadLabel').style.display = 'none';
+
+            // Refresh the page to reflect changes
+            window.location.reload();
         }
 
         // Function to parse JWT token
